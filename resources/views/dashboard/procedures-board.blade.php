@@ -182,5 +182,28 @@
         background-color: var(--kepts-primary);
         border-color: var(--kepts-primary);
     }
+    
+    /* Filter button styling - Green when active, Red when inactive */
+    .filter-btn + label {
+        border-color: #dc2626 !important;
+        color: #dc2626 !important;
+        background-color: transparent;
+    }
+    
+    .filter-btn:checked + label {
+        border-color: #22c55e !important;
+        color: #fff !important;
+        background-color: #22c55e !important;
+    }
+    
+    .filter-btn + label:hover {
+        border-color: #991b1b !important;
+        color: #991b1b !important;
+    }
+    
+    .filter-btn:checked + label:hover {
+        border-color: #16a34a !important;
+        background-color: #16a34a !important;
+    }
 </style>
 @endpush

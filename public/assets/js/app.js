@@ -250,12 +250,15 @@
         }
 
         $('.datatable').each(function () {
+            if ($(this).data('skip-datatable')) {
+                return;
+            }
             if ($.fn.dataTable.isDataTable(this)) {
                 return;
             }
 
             $(this).DataTable({
-                responsive: true,
+                responsive: false,
                 pageLength: 10,
                 order: [],
             });

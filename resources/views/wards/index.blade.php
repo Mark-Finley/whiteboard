@@ -13,12 +13,18 @@
                 </div>
                 <div>
                     <label class="form-label">Color code</label>
-                    <select name="color_code" class="form-select" required>
-                        <option value="">Choose a ward color</option>
+                    <div class="input-group">
+                        <input type="color" name="color_code" class="form-control form-control-color" style="width: 80px; cursor: pointer;" value="#6b7280" required title="Click to choose a color">
+                        <input type="text" class="form-control" placeholder="#000000" title="Enter hex color code (e.g., #dc2626)" readonly>
+                    </div>
+                    <small class="text-muted d-block mt-2">Quick presets:</small>
+                    <div class="d-flex gap-2 mt-2 flex-wrap">
                         @foreach($colorOptions as $label => $colorCode)
-                            <option value="{{ $colorCode }}">{{ $label }} ({{ $colorCode }})</option>
+                            <button type="button" class="btn btn-sm" style="background: {{ $colorCode }}; color: #fff; border: 2px solid {{ $colorCode }};" onclick="document.querySelector('input[name=color_code]').value='{{ $colorCode }}'; document.querySelector('input[type=text]').value='{{ $colorCode }}';" title="{{ $label }}">
+                                {{ $label }}
+                            </button>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Save ward</button>
             </form>
@@ -46,11 +52,7 @@
                                         @csrf
                                         @method('PUT')
                                         <input type="text" name="name" value="{{ $ward->name }}" class="form-control form-control-sm" style="width: 130px;">
-                                        <select name="color_code" class="form-select form-select-sm" style="width: 180px;">
-                                            @foreach($colorOptions as $label => $colorCode)
-                                                <option value="{{ $colorCode }}" @selected($ward->color_code === $colorCode)>{{ $label }} ({{ $colorCode }})</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="color" name="color_code" value="{{ $ward->color_code }}" class="form-control form-control-color form-control-sm" style="width: 80px; cursor: pointer;" title="Click to choose a color">
                                         <button class="btn btn-sm btn-outline-primary" type="submit">Update</button>
                                     </form>
                                     <form action="{{ route('wards.destroy', $ward) }}" method="POST" class="d-inline" data-confirm="Delete this ward?">
@@ -67,4 +69,23 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Update hex display when color picker changes
+    document.querySelectorAll('input[type="color"][name="color_code"]').forEach(colorInput => {
+        const updateHexDisplay = () => {
+            const textInput = colorInput.parentElement.querySelector('input[type="text"]');
+            if (textInput) {
+                textInput.value = colorInput.value.toUpperCase();
+            }
+        };
+        colorInput.addEventListener('change', updateHexDisplay);
+        colorInput.addEventListener('input', updateHexDisplay);
+        // Set initial value
+        updateHexDisplay();
+    });
+</script>
+@endpush
+
 @endsection

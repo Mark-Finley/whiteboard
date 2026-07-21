@@ -339,7 +339,7 @@ class DashboardController extends Controller
             'ward_color' => $patient->ward?->color_code ?? Ward::TRIAGE_COLOR,
             'time_in' => optional($patient->time_in)->format('d M Y, g:i a'),
             'nurse_notes' => $patient->nurse_notes,
-            'ward_time' => $patient->ward_time_spent ?? ($patient->time_in ? now()->diffForHumans($patient->time_in, ['parts' => 2]) : null),
+            'ward_time' => $patient->ward_time_spent,
             'ward_time_breakdown' => collect($patient->cumulative_ward_times ?? [])->map(fn($v, $k) => sprintf('%s: %s', $k, $v))->values()->join('; '),
             'status' => $patient->status,
             'investigations' => $patient->investigations->map(fn($inv) => [

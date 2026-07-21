@@ -11,12 +11,19 @@
                 </div>
                 <div>
                     <label class="form-label">Color code</label>
-                    <select name="color_code" class="form-select" required>
-                        <option value="">Choose a ward color</option>
+                    <div class="input-group">
+                        <input type="color" name="color_code" class="form-control form-control-color" style="width: 80px; cursor: pointer;" value="#6b7280" required title="Click to choose a color">
+                        <input type="text" class="form-control" placeholder="#000000" title="Enter hex color code (e.g., #dc2626)" readonly>
+                    </div>
+                    <small class="text-muted d-block mt-2">Quick presets:</small>
+                    <div class="d-flex gap-2 mt-2 flex-wrap">
                         <?php $__currentLoopData = $colorOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $label => $colorCode): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($colorCode); ?>"><?php echo e($label); ?> (<?php echo e($colorCode); ?>)</option>
+                            <button type="button" class="btn btn-sm" style="background: <?php echo e($colorCode); ?>; color: #fff; border: 2px solid <?php echo e($colorCode); ?>;" onclick="document.querySelector('input[name=color_code]').value='<?php echo e($colorCode); ?>'; document.querySelector('input[type=text]').value='<?php echo e($colorCode); ?>';" title="<?php echo e($label); ?>">
+                                <?php echo e($label); ?>
+
+                            </button>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select>
+                    </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Save ward</button>
             </form>
@@ -44,11 +51,7 @@
                                         <?php echo csrf_field(); ?>
                                         <?php echo method_field('PUT'); ?>
                                         <input type="text" name="name" value="<?php echo e($ward->name); ?>" class="form-control form-control-sm" style="width: 130px;">
-                                        <select name="color_code" class="form-select form-select-sm" style="width: 180px;">
-                                            <?php $__currentLoopData = $colorOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $label => $colorCode): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($colorCode); ?>" <?php if($ward->color_code === $colorCode): echo 'selected'; endif; ?>><?php echo e($label); ?> (<?php echo e($colorCode); ?>)</option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
+                                        <input type="color" name="color_code" value="<?php echo e($ward->color_code); ?>" class="form-control form-control-color form-control-sm" style="width: 80px; cursor: pointer;" title="Click to choose a color">
                                         <button class="btn btn-sm btn-outline-primary" type="submit">Update</button>
                                     </form>
                                     <form action="<?php echo e(route('wards.destroy', $ward)); ?>" method="POST" class="d-inline" data-confirm="Delete this ward?">
@@ -65,6 +68,25 @@
         </div>
     </div>
 </div>
+
+<?php $__env->startPush('scripts'); ?>
+<script>
+    // Update hex display when color picker changes
+    document.querySelectorAll('input[type="color"][name="color_code"]').forEach(colorInput => {
+        const updateHexDisplay = () => {
+            const textInput = colorInput.parentElement.querySelector('input[type="text"]');
+            if (textInput) {
+                textInput.value = colorInput.value.toUpperCase();
+            }
+        };
+        colorInput.addEventListener('change', updateHexDisplay);
+        colorInput.addEventListener('input', updateHexDisplay);
+        // Set initial value
+        updateHexDisplay();
+    });
+</script>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\White Board\resources\views/wards/index.blade.php ENDPATH**/ ?>

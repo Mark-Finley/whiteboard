@@ -14,7 +14,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle datatable">
+        <table class="table table-hover align-middle" data-skip-datatable="true">
             <thead>
                 <tr>
                     <th>GHIMS</th>
@@ -36,6 +36,10 @@
                         <td>{{ $patient->chief_complaint }}</td>
                         <td>{{ optional($patient->time_in)->format('d M Y, H:i') }}</td>
                         <td>{{ ucfirst($patient->status) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No patients found</td>
                     </tr>
                 @endforelse
             </tbody>
